@@ -2,6 +2,7 @@
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.11'
+	//의존성 관리 툴의 버전을 명시
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
@@ -15,15 +16,30 @@ java {
 
 
 repositories {
+	//gradle 인데 왜 maven인지
+	//ubuntu에서 apt-get(레파지토리. 다운받을 수 있는 목록이 있음)을 통해 필요한걸 다운
+	//이처럼 mavenCentral도 의존성을 가져오는 대상 저장소(repository).
+	//아래의 dependencies에 적힌 의존성들의 repository
+	//만약 내부망에서 인터넷을 사용하기 불가한 경우에는 nexus(설치형)와 같은 repository를 사용하기도 함.
 	mavenCentral()
 }
 
+//starter 종속성은 일반적으로 별도의 버전관리가 필요없고 버전에 따라 호환성을 맞춰줌
+//위의 sprinboot, java의 버전을 보고 알아서 맞춰준다.
+//아래의 의존성들을 사용할거라고 명시
 dependencies {
+	//프로젝트 초반에 DB연결하지 않았더라면 jdbc, jpa를 주석처리해야함
+	//DB연결 및 관리를 위한 의존성 : jdbc, mybatis, jpa, springdatajpa(jpa의 발전버전)
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//타임리프(템프릿 엔진-jsp, 타임리프 등) 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//implementation은 컴파일 시점과 런타임 시점에 모두 필요한 라이브러리임을 명시
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//컴파일 시점에서 필요한 라이브러리임을 명시
 	compileOnly 'org.projectlombok:lombok'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
