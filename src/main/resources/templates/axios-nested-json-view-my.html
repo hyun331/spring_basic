@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>nested-json</title>
+
+</head>
+<body>
+<form  id="postForm">
+    <div>
+        <label for="name">NAME</label><input type="text" id="name" name = "name">
+    </div>
+
+    <div>
+        EMAIL : <input type="email" id="email" name = "email">
+    </div>
+    <div>
+        PW : <input type="password" id="password" name = "password">
+    </div>
+    <div id="scoreDiv">
+       점수 : <input type="text" class="scores">
+    </div>
+
+    <button id="addScoreButton">점수 추가</button>
+
+
+    <br>
+    <button type="submit">제출</button>
+
+</form>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document.getElementById("addScoreButton").addEventListener('click',
+        function(event){
+            let target = document.getElementById("scoreDiv");
+            target.innerHTML+=
+            `<div class="grade">수업명 : <input type="text" name="className"><br>점수 : <input type="text" class="point"></div>`;
+        }
+    )
+
+    document.getElementById("postForm").addEventListener('submit',
+        async function(event){
+            event.preventDefault();
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let scores = document.getElementsByClassName("scores");
+            console.log(scores);
+        }
+    )
+</script>
+
+
+</body>
+</html>

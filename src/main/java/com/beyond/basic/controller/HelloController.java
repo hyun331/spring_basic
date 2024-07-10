@@ -1,6 +1,8 @@
 package com.beyond.basic.controller;
 
+import com.beyond.basic.domain.Grade;
 import com.beyond.basic.domain.Hello;
+import com.beyond.basic.domain.Student;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 //해당 클래스가 컨트롤러(사용자의 요청을 처리하고 응답하는 편의기능)임을 명시
 @Controller()
@@ -257,16 +260,41 @@ public class HelloController {
     //case7 : js를 활용한 json데이터 전송(멀티 file)
     @GetMapping("/axios-json-multi-file-view")
     public String axiosJsonMultiFileView(){
-        return "axios-json-file-view";
+        return "axios-json-multi-file-view";
     }
 
     @PostMapping("/axios-json-multi-file-view2")
     @ResponseBody
-    public String axiosJsonMultiFilePost(@RequestPart("hello") String hello, @RequestPart("file") MultipartFile file) {
+    public String axiosJsonMultiFilePost(@RequestPart("hello") String hello, @RequestPart("files") List<MultipartFile> files) {
         System.out.println(hello);
-        System.out.println(file.getOriginalFilename());
+        for(MultipartFile file : files){
+            System.out.println(file.getOriginalFilename());
+        }
         return "ok";
     }
+
+
+    //case 8: 중첩된 json 데이터 처리.
+    //{name:"홍길동", email:"hong@naver.com", scores:{java:80, python:100}}
+    @GetMapping("/axios-nested-json-view")
+    public String axiosNestedJsonView(){
+        return "axios-nested-json-view";
+    }
+
+    @PostMapping("/axios-nested-json-view")
+    @ResponseBody
+    public String axiosNestedJsonPost(@RequestBody Student student){
+        System.out.println(student);
+        int sum = 0;
+        for(Grade grade : student.getGrades()){
+            sum += Integer.parseInt(grade.getPoint());
+        }
+        System.out.println("sum = "+sum);
+
+        return "ok";
+    }
+
+
 
 }
 

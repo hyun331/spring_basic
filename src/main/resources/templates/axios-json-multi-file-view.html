@@ -13,7 +13,7 @@
             <tr><td><label for="name">NAME</label></td><td><input type="text" id="name" name = "name"></td></tr>
             <tr><td><label for="email">EMAIL</label></td><td><input type="email" id="email" name = "email"></td></tr>
             <tr><td><label for="password">PW</label></td><td><input type="password" id="password" name = "password"></td></tr>
-            <tr><td><label for="file">FILE</label> </td><td><input type="file" id="file" name="file"></td></tr>
+            <tr><td><label for="file">FILE</label> </td><td><input type="file" id="file" name="file" multiple></td></tr>
 
         </table>
         <button type="submit">제출</button>
@@ -32,18 +32,18 @@
                 const helloJson = JSON.stringify(hello);
 
                 const fileInput = document.getElementById("file");   //.value 안해도됨
-                const file = fileInput.files[0]; //file은 배열 형태로 get -> file은 여러개가 들어가 있을 수 있음 .우리는 하나만 넣었기 때문에 0
+                const files = fileInput.files; //file은 배열 형태로 get -> file은 여러개가 들어가 있을 수 있음 .우리는 하나만 넣었기 때문에 0
 
                 const formData = new FormData();
-<!--        json 문자열 형식인데  -->
-<!--                formData.append('hello', helloJson);-->
-<!--                Blob 함수는 데이터 형을 지정, 변환할 때 사용함. json으로 전송한다고 명시 -->
                 formData.append('hello',new Blob([helloJson], {type:"application/json"}));
+
+                for(let i=0; i<files.length; i++){
+                    formData.append('files', files[i]);
+                }
                 formData.append('file', file);
 
                 try{
-<!-- ok로 화면 전환 안됨 -> return한게 response에 들어감. 화면전환은 여기서 처리함(vue에서 배움) -->
-                    const response = await axios.post('http://localhost:8080/hello/axios-json-file-view2', formData, {headers : {'Content-Type' : 'multipart/form-data'}});
+                    const response = await axios.post('http://localhost:8080/hello/axios-json-multi-file-view2', formData, {headers : {'Content-Type' : 'multipart/form-data'}});
                     console.log(response.data);
                 }catch(e){
                     console.log(e);
