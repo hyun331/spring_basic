@@ -105,7 +105,7 @@ public class HelloController {
 
 
 
-    //case 7 : pathbariable 방식을 통해 사용자로부터 값을 받아 화면 리턴
+    //case 7 : pathvariable 방식을 통해 사용자로부터 값을 받아 화면 리턴
     //localhost:8080/hello/model-path/1 == 1번에 대한 정보 요청 or /hello/model-path?id=1(파라미터 방식)
     //pathvariable 방식은 url을 통해 자원의 구조를 명확하게 표현함으로, 좀 더 restful한 형식
     //restful : http통신의 원칙 중 하나.
@@ -203,17 +203,70 @@ public class HelloController {
 
     }
 
+    ////////////////////0710
 
     //case5 : js를 활용한 json 데이터 전송
+    //url패턴 : axios-json-view, 화면명 : axios-json-view, get요청 메서드 동일.
+    //post요청 메서드 : axiosJsonPost
+    @GetMapping("/axios-json-view")
+    public String axiosJsonView(){
+        return "axios-json-view";
+    }
 
+    @PostMapping("/axios-json-view")
+    @ResponseBody
+    //JSON으로 전송한 데이터를 받을 때는 @RequestBody 어노테이션 사용
+    public String axiosJsonPost(@RequestBody Hello hello){
+        System.out.println(hello);
+        return "ok";
+    }
 
 
 
 
     //case6 : js를 활용한 json데이터 전송(file)
+    @GetMapping("/axios-json-file-view")
+    public String axiosJsonFileView(){
+        return "axios-json-file-view";
+    }
+
+    @PostMapping("/axios-json-file-view1")
+    @ResponseBody
+    //파일은 json에 들어갈 수 없음 -> @RequstBody 사용 불가
+    //RequestPart : JSON + 파일을 처리할 때 주로 사용하는 어노테이션
+    public String axiosJsonFilePost1(@RequestParam("hello") String hello, @RequestParam("file") MultipartFile file) throws JsonProcessingException {
+        //axios-json-file-view.html에서 formData.append('hello', helloJson); 이렇게 줄 때
+        //String으로 받은 뒤 수동으로 처리하기
+        ObjectMapper objectMapper = new ObjectMapper();
+        Hello h1 = objectMapper.readValue(hello, Hello.class);
+        System.out.println(h1);
+
+        System.out.println(file.getOriginalFilename());
+        return "ok";
+    }
+    @PostMapping("/axios-json-file-view2")
+    @ResponseBody
+    //form 데이터를 통해 josn, filter를 처리할 땐 RequestPart 어노테이션 많이 사용
+    public String axiosJsonFilePost2(@RequestPart("hello") String hello, @RequestPart("file") MultipartFile file){
+        System.out.println(hello);
+        System.out.println(file.getOriginalFilename());
+        return "ok";
+    }
 
 
     //case7 : js를 활용한 json데이터 전송(멀티 file)
+    @GetMapping("/axios-json-multi-file-view")
+    public String axiosJsonMultiFileView(){
+        return "axios-json-file-view";
+    }
+
+    @PostMapping("/axios-json-multi-file-view2")
+    @ResponseBody
+    public String axiosJsonMultiFilePost(@RequestPart("hello") String hello, @RequestPart("file") MultipartFile file) {
+        System.out.println(hello);
+        System.out.println(file.getOriginalFilename());
+        return "ok";
+    }
 
 }
 

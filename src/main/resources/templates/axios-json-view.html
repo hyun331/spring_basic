@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>form-view</title>
+</head>
+<body>
+    <form enctype="application/x-www-form-urlencoded" id="postForm">
+        <table>
+            <tr><td><label for="name">NAME</label></td><td><input type="text" id="name" name = "name"></td></tr>
+            <tr><td><label for="email">EMAIL</label></td><td><input type="email" id="email" name = "email"></td></tr>
+            <tr><td><label for="password">PW</label></td><td><input type="password" id="password" name = "password"></td></tr>
+        </table>
+        <button type="submit">제출</button>
+
+    </form>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById("postForm").addEventListener('submit',
+            async function(event){
+                event.preventDefault();
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+
+                const formData = {name, email, password};
+
+                try{
+                //axios에서 알아서 객체->json하는 직렬화 진행
+                    const response = await axios.post('http://localhost:8080/hello/axios-json-view', formData);
+                    console.log(response.data);
+                }catch(e){
+                    console.log(e);
+                }
+            }
+        )
+    </script>
+
+
+</body>
+</html>
