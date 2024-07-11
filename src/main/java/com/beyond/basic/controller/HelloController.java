@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/hello")
 //@RestController //Controller + 각 메서드마다 @ResponseBody
 
-
 public class HelloController {
 
     // case1.화면 요청
