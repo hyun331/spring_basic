@@ -16,8 +16,9 @@ public class MemberMemoryRepository implements MemberRepository{
         memberList = new ArrayList<>();
     }
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
         memberList.add(member);
+        return member;  //원래는 db에 넣고 다시 찾아서 줘야함
     }
 
     @Override

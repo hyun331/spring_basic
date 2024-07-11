@@ -1,12 +1,39 @@
 package com.beyond.basic.repository;
 
 import com.beyond.basic.domain.Member;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class MemberJdbcRepository implements MemberRepository{
+
+    //다형성이 필요없음
+    @Autowired
+    private DataSource dataSource;
+
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "insert into member(name, email, password) values(?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, member.getName());
+            preparedStatement.setString(2, member.getEmail());
+            preparedStatement.setString(3, member.getPassword());
+            preparedStatement.executeUpdate();  //추가, 수정일 경우 executeUpdate하고. 조회의 경우 executeQuery
+
+            //원래는 넣은 멤버 찾아서 가져와야 id나 created_time 알수있음
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
 
     }
 

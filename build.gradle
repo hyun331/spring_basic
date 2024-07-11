@@ -30,7 +30,9 @@ repositories {
 dependencies {
 	//프로젝트 초반에 DB연결하지 않았더라면 jdbc, jpa를 주석처리해야함
 	//DB연결 및 관리를 위한 의존성 : jdbc, mybatis, jpa, springdatajpa(jpa의 발전버전)
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	//mariadb 클라이언트 추가
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	//타임리프(템프릿 엔진-jsp, 타임리프 등) 의존성

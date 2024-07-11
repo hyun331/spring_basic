@@ -7,7 +7,7 @@ import java.util.List;
 //1개 조회, 전체 조회, 등록, 삭제
 public interface MemberRepository {
     //보통 DB에 저장할 때 넣은걸 return 해줌
-    void save(Member member);
+    Member save(Member member);
 
     List<Member> findAll();
 
