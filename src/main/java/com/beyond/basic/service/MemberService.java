@@ -2,10 +2,12 @@ package com.beyond.basic.service;
 
 import com.beyond.basic.controller.MemberController;
 import com.beyond.basic.domain.Member;
+import com.beyond.basic.domain.MemberDetResDto;
 import com.beyond.basic.domain.MemberReqDto;
 import com.beyond.basic.domain.MemberResDto;
 import com.beyond.basic.repository.MemberJdbcRepository;
 import com.beyond.basic.repository.MemberMemoryRepository;
+import com.beyond.basic.repository.MemberMybatisRepository;
 import com.beyond.basic.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     //싱글톤 객체를 주입(DI) 받는다는 의미
     @Autowired
-    public MemberService(MemberJdbcRepository memoryRepository){
+    public MemberService(MemberMybatisRepository memoryRepository) {
         memberRepository = memoryRepository;
     }
 
@@ -39,8 +41,16 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void memberDetail(Long id){
-        memberRepository.findById(id);
+    //Member와 MemberDetResDto가 같아도 옮겨 담자
+    public MemberDetResDto memberDetail(Long id){
+        Member member = memberRepository.findById(id);
+        MemberDetResDto memberDetResDto = new MemberDetResDto();
+        memberDetResDto.setId(member.getId());
+        memberDetResDto.setEmail(member.getEmail());
+        memberDetResDto.setName(member.getName());
+        memberDetResDto.setPassword(member.getPassword());
+
+        return memberDetResDto;
     }
 
 
@@ -50,7 +60,7 @@ public class MemberService {
         List<MemberResDto> memberResDtoList = new ArrayList<>();
         for(Member m : memberList){
             MemberResDto memberResDto = new MemberResDto();
-//            memberResDto.setId(m.getId());
+            memberResDto.setId(m.getId());
             memberResDto.setName(m.getName());
             memberResDto.setEmail(m.getEmail());
             memberResDtoList.add(memberResDto);

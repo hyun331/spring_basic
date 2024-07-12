@@ -1,6 +1,7 @@
 package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.Member;
+import com.beyond.basic.domain.MemberDetResDto;
 import com.beyond.basic.domain.MemberReqDto;
 import com.beyond.basic.domain.MemberResDto;
 import com.beyond.basic.service.MemberService;
@@ -59,12 +60,13 @@ public class MemberController {
     //회원 상세조회 : memberDetail
     //url : member/1, member/2
     //화면명 : member-detail
-    @GetMapping("/member/{id}")
+    @GetMapping("/member/detail/{id}")
     //@ResponseBody
     //int 또는 Long으로 받을 경우 스프링에서 자동으로 형변환(String->Long)
     public String memberDetail(@PathVariable Long id, Model model){
-        //model.addAttribute();
-        return "member-detail";
+        MemberDetResDto memberDetResDto = memberService.memberDetail(id);
+        model.addAttribute("member", memberDetResDto);
+        return "member/member-detail";
     }
 
 
