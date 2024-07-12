@@ -35,7 +35,9 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	//mybatis 관련 의존성 추가
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//jpa + springDataJpa의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	//타임리프(템프릿 엔진-jsp, 타임리프 등) 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

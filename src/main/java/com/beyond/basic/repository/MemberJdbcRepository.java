@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberJdbcRepository implements MemberRepository{
@@ -73,7 +74,7 @@ public class MemberJdbcRepository implements MemberRepository{
     }
 
     @Override
-    public Member findById(Long inputId) {
+    public Optional<Member> findById(Long inputId) {
         Member member = new Member();
         try{
             Connection connection = dataSource.getConnection();
@@ -94,6 +95,6 @@ public class MemberJdbcRepository implements MemberRepository{
         }catch (SQLException e){
             e.printStackTrace();;
         }
-        return member;
+        return Optional.ofNullable(member);
     }
 }

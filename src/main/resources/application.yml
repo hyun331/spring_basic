@@ -13,6 +13,21 @@ spring:
     url: jdbc:mariadb://localhost:3306/basic
     username: root
     password: 1234
+  jpa:
+   database: mysql
+   #innoDB사용 설정
+   database-platform: org.hibernate.dialect.MariaDBDialect
+   #테이블은 생성해주나, 스키마는 반드시 사전에 생성 필요
+   generate-ddl: true
+   #jpa는 인터페이스고, hibernate는 구현체(실질적 기능 구현)
+   hibernate:
+     #create 옵션은 매번 모든 table을 drop 후 재생성
+     #update 옵션은  변경사항만 alter를 적용하고 기존의 데이터 유지 -> 변경사항 중에 주로 추가사항만 반영하고 삭제나 수정은 반영안된는 경우도 있음
+     #validate 옵션은 실제 DB와의 차이만 check -> 반영 안한다. -> 실무에선 validate 많이 함.
+     #--> 초반에는 create하다가 스키마가 확정되면 update로 변경하기
+     ddl-auto: update
+   #콘솔창에 ddl, dml문을 출력하여 보여주는 옵션 -> 실무에선 false로 둠.(너무 많은 sql출력)
+   show_sql: true
 
 #어느 폴더 밑의 xml 파일
 mybatis:
