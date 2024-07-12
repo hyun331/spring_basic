@@ -14,6 +14,6 @@ spring:
     username: root
     password: 1234
 
-#어느 폴더 밑의 어느 파일
+#어느 폴더 밑의 xml 파일
 mybatis:
-  mapper-locations: classpath://mapper/**/*.xml
+  mapper-locations: classpath:/mapper/**/*.xml
