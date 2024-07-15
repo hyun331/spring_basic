@@ -1,16 +1,14 @@
 package com.beyond.basic.service;
 
 import com.beyond.basic.controller.MemberController;
-import com.beyond.basic.domain.Member;
-import com.beyond.basic.domain.MemberDetResDto;
-import com.beyond.basic.domain.MemberReqDto;
-import com.beyond.basic.domain.MemberResDto;
+import com.beyond.basic.domain.*;
 import com.beyond.basic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,35 +44,30 @@ public class MemberService {
         }
         //받아온 reqDto를 Service에서 객체로 만들어주기
         //근데 이 방법은 컬럼 많아지면 어려움
-        Member member = new Member();
-        member.setName(memberdto.getName());
-        member.setEmail(memberdto.getEmail());
-        member.setPassword(memberdto.getPassword());
+        Member member = memberdto.toEntity();
         memberRepository.save(member);
     }
 
     //Member와 MemberDetResDto가 같아도 옮겨 담자
     public MemberDetResDto memberDetail(Long id){
-//        Member member = memberRepository.findById(id);
-//        MemberDetResDto memberDetResDto = new MemberDetResDto();
-//        memberDetResDto.setId(member.getId());
-//        memberDetResDto.setEmail(member.getEmail());
-//        memberDetResDto.setName(member.getName());
-//        memberDetResDto.setPassword(member.getPassword());
-//
-//        return memberDetResDto;
-
         //springdatajpa로 처리
         //client한테 적절한 예외 메세지와 상태 코드 주는 것이 주요 목적
         //또한 예외를 강제 발생시킴으로서 적절한 롤백처리 하는 것도 주요 목적 -> @Transactional 이 붙어있어야 가능!
         Optional<Member> optMember = memberRepository.findById(id);
         Member member = optMember.orElseThrow(()->new EntityNotFoundException("없는 회원입니다."));
-        MemberDetResDto memberDetResDto = new MemberDetResDto();
-        memberDetResDto.setId(member.getId());
-        memberDetResDto.setEmail(member.getEmail());
-        memberDetResDto.setName(member.getName());
-        memberDetResDto.setPassword(member.getPassword());
-
+//        MemberDetResDto memberDetResDto = new MemberDetResDto();
+//        memberDetResDto.setId(member.getId());
+//        memberDetResDto.setEmail(member.getEmail());
+//        memberDetResDto.setName(member.getName());
+//        memberDetResDto.setPassword(member.getPassword());
+//        LocalDateTime createdTime = member.getCreatedTime();
+//        String value = createdTime.getYear()+"년"+createdTime.getMonthValue()+"월"+createdTime.getDayOfMonth()+"일";
+//        memberDetResDto.setCreatedTime(value);
+        MemberDetResDto memberDetResDto = member.detFromEntity();
+        System.out.println("글쓴이의 게시글 개수 : "+member.getPosts().size());
+        for(Post p : member.getPosts()){
+            System.out.println("글 제목 : "+p.getTitle());
+        }
         return memberDetResDto;
     }
 
@@ -84,14 +77,31 @@ public class MemberService {
         List<Member> memberList= memberRepository.findAll();
         List<MemberResDto> memberResDtoList = new ArrayList<>();
         for(Member m : memberList){
-            MemberResDto memberResDto = new MemberResDto();
-            memberResDto.setId(m.getId());
-            memberResDto.setName(m.getName());
-            memberResDto.setEmail(m.getEmail());
+            MemberResDto memberResDto = new MemberResDto(m.getId(), m.getName(), m.getEmail());
             memberResDtoList.add(memberResDto);
         }
 
         return memberResDtoList;
 
     }
+
+    public void pwUpdate(MemberUpdateDto dto){
+        Member member = memberRepository.findById(dto.getId()).orElseThrow(()->new EntityNotFoundException("member is not found"));
+        if(member!=null){
+            member.updatePW(dto.getPassword());
+
+            //기존 객체를 조회 후 수정한 다음에 save()시에는 jpa가 update를 실행
+            //save는 추가, 수정 둘의 기능이 있음
+            memberRepository.save(member);
+        }
+    }
+
+
+    public void deleteMember(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("member is not found"));
+        memberRepository.delete(member);
+    }
+
+
 }
+
