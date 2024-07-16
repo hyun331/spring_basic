@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
 
@@ -29,6 +30,13 @@ public class HelloController {
     //만약 여기서 resonseBody가 없고 returndl 스트링이면 스프링은 resources/templates폴더 밑에 helloword.html화면을 찾아 리턴
 //    @ResponseBody
     public String helloWorld(){
+        return "helloworld";
+    }
+
+    //이와같이 Controller에서도 HttpServletReqeust 객체를 주입받아 사용 가능
+    public String helloWorld2(HttpServletRequest request){
+        System.out.println(request.getSession());
+        System.out.println(request.getHeader("Cookie"));
         return "helloworld";
     }
 

@@ -21,4 +21,9 @@ public class MemberDetResDto {
         this.password = password;
         this.createdTime = createdTime;
     }
+
+
+    public Member toEntity(){
+        return new Member(this.id, this.name, this.email, this.password);
+    }
 }

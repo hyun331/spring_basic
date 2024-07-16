@@ -15,4 +15,9 @@ public class MemberResDto {
         this.name = name;
         this.email = email;
     }
+
+    public Member toEntity(){
+        Member member = new Member(this.id, this.name, this.email);
+        return member;
+    }
 }

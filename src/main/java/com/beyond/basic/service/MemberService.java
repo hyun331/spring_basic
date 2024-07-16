@@ -19,7 +19,7 @@ import java.util.Optional;
 //만약 예외가 발생하면 롤백처리 자동화
 //각 메서드마다 @Transactional을 붙일 수 있음. 근데 필요없는 곳에는 붙이지 말기
 //Service단에 붙이면 아래 모든 메서드에 @Transactional 한것과 동일
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
     //최초에 생성하면 재할당 안되게
     private final MyMemberRepository memberRepository;
@@ -30,22 +30,21 @@ public class MemberService {
     }
 
 
-    //다형성 설계인 경우
-//    private final MemberRepository memberRepository;
-//    @Autowired
-//    public MemberService(MemberSpringDataJpaRepository memoryRepository) {
-//        this.memberRepository = memoryRepository;
-//    }
 
-
-    public void memberCreate(MemberReqDto memberdto) {
+    @Transactional
+    public MemberDetResDto memberCreate(MemberReqDto memberdto) {
         if(memberdto.getPassword().length() < 8){
             throw new IllegalArgumentException("비밀번호가 너무 짧습니다.");
         }
         //받아온 reqDto를 Service에서 객체로 만들어주기
-        //근데 이 방법은 컬럼 많아지면 어려움
         Member member = memberdto.toEntity();
-        memberRepository.save(member);
+        Member newMember = memberRepository.save(member);
+
+        //Transactional rollback test
+        //여기서 예외터지면 save가 취소됨
+        if(member.getName().equals("kim"))
+            throw new IllegalArgumentException("예외");
+        return newMember.detFromEntity();
     }
 
     //Member와 MemberDetResDto가 같아도 옮겨 담자
