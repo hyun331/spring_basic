@@ -13,7 +13,7 @@ import java.util.List;
 //해당 클래스명으로 테이블 및 컬럼 자동 생성하고 각종 설정 정보 위임
 @Entity //알아서 만들어줌
 @NoArgsConstructor  //기본생성자는 JPA에서 필수
-public class Member {
+public class Member extends BaseEntity {
     @Id //이거 설정한 변수가 pk로 됨
     //GenerationType.AUTO : jpa가 자동으로 적절한 전략을 선택하도록 맡김
     //GenerationType.IDENTITY : AUTO_INCREMENT
@@ -36,12 +36,7 @@ public class Member {
     private List<Post> posts;
 
 
-    //이런 캐멀케이스 변수는 DB에 _(언더바)로 들어감 -> created_time 으로 들어감.
-    @CreationTimestamp  //DB에는 current_timestamp가 적용되지 않음
-    private LocalDateTime createdTime;
 
-    @UpdateTimestamp    //데이터 업데이트 될 때마다 갱신
-    private LocalDateTime updateTime;
 
     public Member(String name, String email, String password){
         this.name = name;
@@ -63,7 +58,7 @@ public class Member {
 
     //entity -> dto
     public MemberDetResDto detFromEntity(){
-        LocalDateTime createdTime = this.createdTime;
+        LocalDateTime createdTime = this.getCreatedTime();
         String value = createdTime.getYear()+"년"+createdTime.getMonthValue()+"월"+createdTime.getDayOfMonth()+"일";
         MemberDetResDto memberDetResDto = new MemberDetResDto(this.id, this.name, this.email, this.password, value);
         return memberDetResDto;

@@ -2,6 +2,7 @@ package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.*;
 import com.beyond.basic.service.MemberService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rest")
+@Api(tags = "회원관리 서비스")
 //csr - 클라이언트 사이드 랜더링 -> 화면제공 필요없음.(vue에서 제공)/ 리턴은 json
 //RestContoller : 모든 메서드 상단에 @Responseoy한 것과 같음
 public class MemberRestController {
@@ -29,27 +31,22 @@ public class MemberRestController {
     }
 
     @GetMapping("/member/list")
-    public List<MemberResDto> memberList(){
+    public ResponseEntity<CommonResDto> memberList(){
         List<MemberResDto> memberList = memberService.memberList();
-
-        return memberList;
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "member list successfully found", memberList);
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
     @GetMapping("/member/detail/{id}")
-    public ResponseEntity<CommonResDto> memberDetail(@PathVariable Long id){
-        MemberDetResDto memberDetResDto = null;
-        CommonResDto commonResDto = null;
+    public ResponseEntity<Object> memberDetail(@PathVariable Long id){
         try{
-            memberDetResDto = memberService.memberDetail(id);
-            commonResDto = new CommonResDto(HttpStatus.OK, "member detail success",memberDetResDto.toEntity());
+            MemberDetResDto memberDetResDto = memberService.memberDetail(id);
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "member is found",memberDetResDto.toEntity());
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
-
-
         }catch (EntityNotFoundException e){
             e.printStackTrace();
-            commonResDto = new CommonResDto(HttpStatus.NOT_FOUND, "member detail failed", memberDetResDto);
-
-            return new ResponseEntity<>(commonResDto, HttpStatus.NOT_FOUND);
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
 
         }
     }
@@ -58,18 +55,16 @@ public class MemberRestController {
 
     //postman을 통해 json을 받음 -> RequestBody
     @PostMapping("/member/create")
-    public ResponseEntity<CommonResDto> memberCreatePost(@RequestBody MemberReqDto memberdto){
-        MemberDetResDto memberDetResDto = null;
-        CommonResDto commonResDto;
+    public ResponseEntity<Object> memberCreatePost(@RequestBody MemberReqDto memberdto){
         try{
-            memberDetResDto = memberService.memberCreate(memberdto);
-            commonResDto = new CommonResDto(HttpStatus.CREATED, "member is successfully created", memberDetResDto.toEntity());
+            MemberDetResDto memberDetResDto = memberService.memberCreate(memberdto);
+            CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "member is successfully created", memberDetResDto.toEntity());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
-            commonResDto = new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null);
-            return new ResponseEntity<>(commonResDto, HttpStatus.BAD_REQUEST);
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
         }
     }
 

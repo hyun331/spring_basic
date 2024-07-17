@@ -8,6 +8,12 @@
 
 #DB ?? - ????? driver? ??
 spring:
+  mvc:
+    pathmatch:
+      #springboot2.4 이상에서는 기본적으로 PathPatternParser를 사용하고 있는데,
+      #springfox와 같은 일부 라이브러리에서는 해당 pathpattern rule과 충돌나는 경우가 있어 path방식 변경
+      matching-strategy: ant_path_matcher
+
   dataSource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/basic
@@ -25,7 +31,7 @@ spring:
      #update 옵션은  변경사항만 alter를 적용하고 기존의 데이터 유지 -> 변경사항 중에 주로 추가사항만 반영하고 삭제나 수정은 반영안된는 경우도 있음
      #validate 옵션은 실제 DB와의 차이만 check -> 반영 안한다. -> 실무에선 validate 많이 함.
      #--> 초반에는 create하다가 스키마가 확정되면 update로 변경하기
-     ddl-auto: update
+     ddl-auto: create
    #콘솔창에 ddl, dml문을 출력하여 보여주는 옵션 -> 실무에선 false로 둠.(너무 많은 sql출력)
    show_sql: true
 
