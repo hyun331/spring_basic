@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,9 @@ public class MemberService {
     public MemberDetResDto memberCreate(MemberReqDto memberdto) {
         if(memberdto.getPassword().length() < 8){
             throw new IllegalArgumentException("비밀번호가 너무 짧습니다.");
+        }
+        if(memberRepository.findByEmail(memberdto.getEmail()).isPresent()){
+            throw new IllegalArgumentException("이미 존재하는 email 입니다.");
         }
         //받아온 reqDto를 Service에서 객체로 만들어주기
         Member member = memberdto.toEntity();

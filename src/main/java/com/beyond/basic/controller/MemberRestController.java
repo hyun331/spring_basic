@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,10 @@ public class MemberRestController {
         this.memberService = memberService;
     }
 
+    @GetMapping("/member/text")
+    public String memberText(){
+        return "ok";
+    }
 
     @GetMapping("/member/list")
     public List<MemberResDto> memberList(){
@@ -49,6 +54,7 @@ public class MemberRestController {
         }
     }
 
+//SQLIntegrityConstraintViolationException - email 중복 에러
 
     //postman을 통해 json을 받음 -> RequestBody
     @PostMapping("/member/create")
@@ -59,13 +65,13 @@ public class MemberRestController {
             memberDetResDto = memberService.memberCreate(memberdto);
             commonResDto = new CommonResDto(HttpStatus.CREATED, "member is successfully created", memberDetResDto.toEntity());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
-        }catch (IllegalArgumentException e){
+        }
+        catch (IllegalArgumentException e){
             e.printStackTrace();
-            commonResDto = new CommonResDto(HttpStatus.BAD_REQUEST, "member isn't created", memberDetResDto);
-            return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
+            commonResDto = new CommonResDto(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+            return new ResponseEntity<>(commonResDto, HttpStatus.BAD_REQUEST);
         }
     }
-
 
     //수정의 2가지 요청방식 : put, patch
     //PUT - 덮어쓰기
