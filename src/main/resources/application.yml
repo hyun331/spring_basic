@@ -10,6 +10,7 @@
 spring:
   mvc:
     pathmatch:
+      #swagger
       #springboot2.4 이상에서는 기본적으로 PathPatternParser를 사용하고 있는데,
       #springfox와 같은 일부 라이브러리에서는 해당 pathpattern rule과 충돌나는 경우가 있어 path방식 변경
       matching-strategy: ant_path_matcher

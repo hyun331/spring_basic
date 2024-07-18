@@ -302,6 +302,11 @@ public class HelloController {
     }
 
 
+    //빌더패턴 실습
+    public void helloBuilderTest(){
+        Hello hello = Hello.builder().build();
+    }
+
 
 }
 
