@@ -27,7 +27,8 @@ public class Post extends BaseEntity{
     //@OneToOne
     //@JoinColumn(name="member_id" unique=true)
     ///////////////////////////////////////////
-    @ManyToOne
+    //ManyToOne, OneToOne 어노테이션은 default설정이 eager이므로 lazy로 변경
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     //JPA의 영속성컨텍스트(persistence)에 의해 Member가 관리
     private Member member;

@@ -1,6 +1,8 @@
 package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.*;
+import com.beyond.basic.repository.MemberRepository;
+import com.beyond.basic.repository.MyMemberRepository;
 import com.beyond.basic.service.MemberService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,11 @@ import java.util.List;
 public class MemberRestController {
 
     private final MemberService  memberService;
+    private final MyMemberRepository myMemberRepository;
     @Autowired
-    MemberRestController(MemberService memberService){
+    MemberRestController(MemberService memberService, MyMemberRepository myMemberRepository){
         this.memberService = memberService;
+        this.myMemberRepository = myMemberRepository;
     }
 
     @GetMapping("/member/text")
@@ -81,6 +85,17 @@ public class MemberRestController {
     public String deleteMember(@PathVariable Long id){
         memberService.deleteMember(id);
         return "ok";
+    }
+
+
+
+    //lazy지연로딩, eager즉시로딩 테스트
+    @GetMapping("/member/post/all")
+    public void memberPostAll(){
+        List<Member> memberList = myMemberRepository.findAll();
+        for(Member m : memberList){
+            System.out.println(m.getPosts().size());
+        }
     }
 
 
