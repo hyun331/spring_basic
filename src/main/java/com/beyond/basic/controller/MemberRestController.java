@@ -43,16 +43,16 @@ public class MemberRestController {
 
     @GetMapping("/member/detail/{id}")
     public ResponseEntity<Object> memberDetail(@PathVariable Long id){
-        try{
+//        try{
             MemberDetResDto memberDetResDto = memberService.memberDetail(id);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "member is found",memberDetResDto.toEntity());
             return new ResponseEntity<>(commonResDto, HttpStatus.OK);
-        }catch (EntityNotFoundException e){
-            e.printStackTrace();
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
-            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
-
-        }
+//        }catch (EntityNotFoundException e){
+//            e.printStackTrace();
+//            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND, e.getMessage());
+//            return new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
+//
+//        }
     }
 
 //SQLIntegrityConstraintViolationException - email 중복 에러
@@ -60,16 +60,16 @@ public class MemberRestController {
     //postman을 통해 json을 받음 -> RequestBody
     @PostMapping("/member/create")
     public ResponseEntity<Object> memberCreatePost(@RequestBody MemberReqDto memberdto){
-        try{
+//        try{
             MemberDetResDto memberDetResDto = memberService.memberCreate(memberdto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.CREATED, "member is successfully created", memberDetResDto.toEntity());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
-        }
-        catch (IllegalArgumentException e){
-            e.printStackTrace();
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
-            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
-        }
+//        }
+//        catch (IllegalArgumentException e){
+//            e.printStackTrace();
+//            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST, e.getMessage());
+//            return new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
+//        }
     }
 
     //수정의 2가지 요청방식 : put, patch
